@@ -22,7 +22,6 @@ export function ConversationsProvider({ id, children }) {
   }
 
   const addMessageToConversation = useCallback(({ recipients, text, sender }) => {
-    alert('aaa');
     setConversations(prevConversations => {
       let madeChange = false
       const newMessage = { sender, text }
