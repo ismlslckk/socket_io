@@ -14,7 +14,12 @@ export function SocketProvider({ id, children }) {
     const newSocket = io(
       'http://localhost:5001',
       { query: { id } }
-    )
+    );
+
+    newSocket.on("connect_error", (err) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
+
     setSocket(newSocket)
 
     return () => newSocket.close()

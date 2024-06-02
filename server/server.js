@@ -7,6 +7,11 @@ const io = require('socket.io')(server, {
   }
 });
 
+io.use((socket, next) => {
+  console.log('middleware test');
+  next();
+});
+
 function sleeper(ms) {
   return function (x) {
     return new Promise(resolve => setTimeout(() => resolve(x), ms));
