@@ -29,5 +29,13 @@ io.on('connection', socket => {
       })
     })
   })
+
+
+  socket.on('disconnect', () => {
+    console.log(`${socket.handshake.query.id} disconnected`);
+  });
+
 })
+
+
 server.listen(5001)
