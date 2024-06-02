@@ -56,10 +56,19 @@ export function ConversationsProvider({ id, children }) {
     return () => socket.off('receive-message')
   }, [socket, addMessageToConversation])
 
-  function sendMessage(recipients, text) {
-    socket.emit('send-message', { recipients, text })
 
-    addMessageToConversation({ recipients, text, sender: id })
+  const proceedResultOfSendMessage = (timeout, response) => {
+    if (timeout)
+      return;
+    
+    const { recipients, text, isSuccess } = response;
+    if (isSuccess) {
+      addMessageToConversation({ recipients, text, sender: id })
+    }
+  }
+
+  function sendMessage(recipients, text) {
+    socket.timeout(5000).emit('send-message', { recipients, text }, proceedResultOfSendMessage);
   }
 
   const formattedConversations = conversations.map((conversation, index) => {
@@ -79,7 +88,7 @@ export function ConversationsProvider({ id, children }) {
       const fromMe = id === message.sender
       return { ...message, senderName: name, fromMe }
     })
-    
+
     const selected = index === selectedConversationIndex
     return { ...conversation, messages, recipients, selected }
   })
