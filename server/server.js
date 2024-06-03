@@ -12,6 +12,8 @@ io.use((socket, next) => {
   next();
 });
 
+
+
 function sleeper(ms) {
   return function (x) {
     return new Promise(resolve => setTimeout(() => resolve(x), ms));
@@ -19,10 +21,15 @@ function sleeper(ms) {
 }
 
 io.on('connection', socket => {
+  socket.onAny((eventName, ...args) => {
+    /*     console.log({eventName,args});
+     */    /* socket.disconnect(); */
+  });
   const id = socket.handshake.query.id
   socket.join(id)
 
   socket.on('send-message', async ({ recipients, text }, callback) => {
+    console.log('send-message');
     sleeper(250)().then(x => {
       callback({ isSuccess: true, recipients, text })
       recipients.forEach(recipient => {
